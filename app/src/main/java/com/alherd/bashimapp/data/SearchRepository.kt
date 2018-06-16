@@ -5,7 +5,7 @@ class SearchRepository(private val apiService: BashImApiService) {
         return apiService.searchQuotes(site, name, 50)
     }
 
-    fun searchSources(): io.reactivex.Observable<List<Quote>> {
+    fun searchSources(): io.reactivex.Observable<List<List<SourceOfQuotes>>> {
         return apiService.searchSources()
     }
 }
