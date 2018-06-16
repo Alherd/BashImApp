@@ -4,17 +4,19 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.alherd.bashimapp.data.SourceOfQuotes
+import kotlinx.android.synthetic.main.source_item.view.*
 
-/**
- * Created by Olgerd on 16.06.2018.
- */
-class SourceOfQuotesAdapter(list: MutableList<SourceOfQuotesAdapter>) : RecyclerView.Adapter<SourceOfQuotesAdapter.ViewHolder>() {
+class SourceOfQuotesAdapter(list: MutableList<SourceOfQuotes>) : RecyclerView.Adapter<SourceOfQuotesAdapter.ViewHolder>() {
+
+    private val mItems: MutableList<SourceOfQuotes> = list
     override fun getItemCount(): Int {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return mItems.size
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val item = mItems[position]
+        holder.title.text = item.desc
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder {
@@ -24,6 +26,7 @@ class SourceOfQuotesAdapter(list: MutableList<SourceOfQuotesAdapter>) : Recycler
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val title = view.text!!
     }
 
 }
