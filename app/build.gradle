@@ -42,4 +42,5 @@ dependencies {
     kapt "com.jakewharton:butterknife-compiler:$butterknife_version"
 
     implementation "com.android.support:recyclerview-v7:26.1.0"
+    implementation "com.android.support:cardview-v7:26.1.0"
 }
