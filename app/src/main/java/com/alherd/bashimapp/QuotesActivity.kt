@@ -1,7 +1,8 @@
 package com.alherd.bashimapp
 
-import android.content.Intent
-import android.net.NetworkInfo
+/**
+ * Created by Olgerd on 16.06.2018.
+ */
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -9,31 +10,24 @@ import android.support.v7.widget.RecyclerView
 import android.util.Log
 import butterknife.BindView
 import butterknife.ButterKnife
+import com.alherd.bashimapp.data.Quote
 import com.alherd.bashimapp.data.SearchRepository
 import com.alherd.bashimapp.data.SearchRepositoryProvider
-import com.alherd.bashimapp.data.SourceOfQuotes
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
-const val TAG: String = "MainActivity"
+const val INTENT_SITE_NAME = "site"
+const val INTENT_NAME_NAME = "name"
 
-class MainActivity : AppCompatActivity(), ChangeSourceListener {
-    override fun sourceChanged(position: Int) {
-        Log.d(TAG, "from main = ${adapter[position]}")
-        val intent = Intent(applicationContext, QuotesActivity::class.java)
-        intent.putExtra(INTENT_NAME_NAME, adapter[position].name)
-        intent.putExtra(INTENT_SITE_NAME, adapter[position].site)
-        startActivity(intent)
-    }
+class QuotesActivity : AppCompatActivity() {
 
     private val compositeDisposable: CompositeDisposable = CompositeDisposable()
     private val repository: SearchRepository = SearchRepositoryProvider.provideSearchRepository()
-    private val list: MutableList<SourceOfQuotes> = mutableListOf()
+    private val list: MutableList<Quote> = mutableListOf()
 
     @BindView(R.id.list)
     lateinit var listView: RecyclerView
-    lateinit var adapter: SourceOfQuotesAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,15 +37,16 @@ class MainActivity : AppCompatActivity(), ChangeSourceListener {
         val linearLayoutManager = LinearLayoutManager(this)
         linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
         listView.layoutManager = linearLayoutManager
+
+        val site = intent.getStringExtra(INTENT_SITE_NAME)
+        val name = intent.getStringExtra(INTENT_NAME_NAME)
         compositeDisposable.add(
-                repository.searchSources()
+                repository.searchQuotes(site, name)
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeOn(Schedulers.io())
                         .subscribe({ result ->
-                            result.forEach { list.addAll(it) }
-                            adapter = SourceOfQuotesAdapter(list)
-                            adapter.addListener(this)
-                            listView.adapter = adapter
+                            list.addAll(result)
+                            listView.adapter = QuotesAdapter(list)
                             Log.d(TAG, list.toString())
                         })
         )
