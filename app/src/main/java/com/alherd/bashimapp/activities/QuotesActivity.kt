@@ -27,31 +27,40 @@ class QuotesActivity : AppCompatActivity() {
     private val compositeDisposable: CompositeDisposable = CompositeDisposable()
     private val repository: SearchRepository = SearchRepositoryProvider.provideSearchRepository()
     private val list: MutableList<Quote> = mutableListOf()
+    private val linearLayoutManager = LinearLayoutManager(this)
+    private var num: Int = 100
 
     @BindView(R.id.list)
     lateinit var recyclerView: RecyclerView
+
+    private lateinit var site: String
+    private lateinit var name: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         ButterKnife.bind(this)
 
-        val linearLayoutManager = LinearLayoutManager(this)
         linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
         recyclerView.layoutManager = linearLayoutManager
 
-        val site = intent.getStringExtra(INTENT_SITE_NAME)
-        val name = intent.getStringExtra(INTENT_NAME_NAME)
+        site = intent.getStringExtra(INTENT_SITE_NAME)
+        name = intent.getStringExtra(INTENT_NAME_NAME)
+
         compositeDisposable.add(
-                repository.searchQuotes(site, name)
+                repository.searchQuotes(site, name, num)
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeOn(Schedulers.io())
                         .subscribe({ result ->
+                            //   list.clear()
                             list.addAll(result)
-                            recyclerView.adapter = QuotesAdapter(list)
-                            Log.d(TAG, list.toString())
+                            if (recyclerView.adapter == null) {
+                                recyclerView.adapter = QuotesAdapter(list)
+                            } else {
+                                recyclerView.adapter.notifyDataSetChanged()
+                            }
+                            Log.d(TAG, list.size.toString())
                         })
         )
-
     }
 }
