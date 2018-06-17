@@ -1,4 +1,4 @@
-package com.alherd.bashimapp
+package com.alherd.bashimapp.activities
 
 /**
  * Created by Olgerd on 16.06.2018.
@@ -10,6 +10,8 @@ import android.support.v7.widget.RecyclerView
 import android.util.Log
 import butterknife.BindView
 import butterknife.ButterKnife
+import com.alherd.bashimapp.R
+import com.alherd.bashimapp.adapters.QuotesAdapter
 import com.alherd.bashimapp.data.Quote
 import com.alherd.bashimapp.data.SearchRepository
 import com.alherd.bashimapp.data.SearchRepositoryProvider
@@ -27,7 +29,7 @@ class QuotesActivity : AppCompatActivity() {
     private val list: MutableList<Quote> = mutableListOf()
 
     @BindView(R.id.list)
-    lateinit var listView: RecyclerView
+    lateinit var recyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +38,7 @@ class QuotesActivity : AppCompatActivity() {
 
         val linearLayoutManager = LinearLayoutManager(this)
         linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
-        listView.layoutManager = linearLayoutManager
+        recyclerView.layoutManager = linearLayoutManager
 
         val site = intent.getStringExtra(INTENT_SITE_NAME)
         val name = intent.getStringExtra(INTENT_NAME_NAME)
@@ -46,9 +48,10 @@ class QuotesActivity : AppCompatActivity() {
                         .subscribeOn(Schedulers.io())
                         .subscribe({ result ->
                             list.addAll(result)
-                            listView.adapter = QuotesAdapter(list)
+                            recyclerView.adapter = QuotesAdapter(list)
                             Log.d(TAG, list.toString())
                         })
         )
+
     }
 }

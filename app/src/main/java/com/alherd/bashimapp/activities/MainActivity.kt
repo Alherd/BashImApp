@@ -1,7 +1,6 @@
-package com.alherd.bashimapp
+package com.alherd.bashimapp.activities
 
 import android.content.Intent
-import android.net.NetworkInfo
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -9,6 +8,9 @@ import android.support.v7.widget.RecyclerView
 import android.util.Log
 import butterknife.BindView
 import butterknife.ButterKnife
+import com.alherd.bashimapp.listeners.ChangeSourceListener
+import com.alherd.bashimapp.R
+import com.alherd.bashimapp.adapters.SourceOfQuotesAdapter
 import com.alherd.bashimapp.data.SearchRepository
 import com.alherd.bashimapp.data.SearchRepositoryProvider
 import com.alherd.bashimapp.data.SourceOfQuotes
